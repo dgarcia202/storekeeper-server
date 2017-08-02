@@ -1,5 +1,6 @@
 package com.dgarcia202.storekeeper.api.controller;
 
+import com.dgarcia202.storekeeper.api.dto.AddVolumeRequestDto;
 import com.dgarcia202.storekeeper.entity.VolumeEntity;
 import com.dgarcia202.storekeeper.exception.NoActiveVolumeException;
 import com.dgarcia202.storekeeper.service.VolumeService;
@@ -34,6 +35,12 @@ public class VolumeController
     public VolumeEntity GetActiveVolume() throws NoActiveVolumeException
     {
         return this.volumeService.getActive();
+    }
+
+    @PostMapping()
+    public VolumeEntity AddVolume(@RequestBody AddVolumeRequestDto dto)
+    {
+        return this.volumeService.add(dto);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

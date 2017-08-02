@@ -1,5 +1,6 @@
 package com.dgarcia202.storekeeper.service;
 
+import com.dgarcia202.storekeeper.api.dto.AddVolumeRequestDto;
 import com.dgarcia202.storekeeper.entity.VolumeEntity;
 import com.dgarcia202.storekeeper.exception.NoActiveVolumeException;
 import com.dgarcia202.storekeeper.repository.VolumeRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VolumeServiceImpl implements VolumeService
@@ -37,5 +39,25 @@ public class VolumeServiceImpl implements VolumeService
     public List<VolumeEntity> getAll()
     {
         return this.volumeRepository.findAll();
+    }
+
+    public VolumeEntity add(AddVolumeRequestDto dto)
+    {
+        if (dto.getMakeActive())
+        {
+            VolumeEntity activeVolume = this.volumeRepository.findByActive(true);
+            if (activeVolume != null)
+            {
+                this.volumeRepository.delete(activeVolume);
+            }
+        }
+
+        VolumeEntity newVolume = new VolumeEntity();
+        newVolume.setPath(dto.getPath());
+        newVolume.setId(UUID.randomUUID());
+        newVolume.setActive(dto.getMakeActive());
+        this.volumeRepository.saveAndFlush(newVolume);
+
+        return newVolume;
     }
 }
