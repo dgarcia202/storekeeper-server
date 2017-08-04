@@ -48,7 +48,8 @@ public class VolumeServiceImpl implements VolumeService
             VolumeEntity activeVolume = this.volumeRepository.findByActive(true);
             if (activeVolume != null)
             {
-                this.volumeRepository.delete(activeVolume);
+                activeVolume.setActive(false);
+                this.volumeRepository.save(activeVolume);
             }
         }
 
